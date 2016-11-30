@@ -1,5 +1,6 @@
 # from django.shortcuts import render
 from rest_framework.generics import (
+	CreateAPIView,
 	ListAPIView, 
 	RetrieveAPIView,
 	UpdateAPIView,
@@ -7,8 +8,17 @@ from rest_framework.generics import (
 	)
 
 from .models import Post
-from .serializers import PostListSerializer, PostDetailSerializer
+from .serializers import (
+	PostCreateUpdateSerializer,
+	PostListSerializer, 
+	PostDetailSerializer
+	)
 # Create your views here.
+
+
+class PostCreateAPIView(CreateAPIView):
+	queryset = Post.objects.all()
+	serializer_class = PostCreateUpdateSerializer
 
 class PostListAPIView(ListAPIView):
 	queryset = Post.objects.all()
@@ -21,7 +31,7 @@ class PostDetailAPIView(RetrieveAPIView):
 
 class PostUpdateAPIView(UpdateAPIView):
 	queryset = Post.objects.all()
-	serializer_class = PostDetailSerializer
+	serializer_class = PostCreateUpdateSerializer
 	lookup_field = 'slug'
 
 class PostDeleteAPIView(DestroyAPIView):
