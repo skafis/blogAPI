@@ -18,8 +18,10 @@ class PostDetailSerializer(ModelSerializer):
 		model = Post
 		fields = [
 		'id',
+		'author',
 		'title',
 		'slug',
 		'content',
+		'created_date',
 		'published_date',
 		]
