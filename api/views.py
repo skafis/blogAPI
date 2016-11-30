@@ -3,4 +3,5 @@ from rest_framework.generics import ListAPIView
 from . models import Post
 # Create your views here.
 
-class PostListAPIView
+class PostListAPIView(ListAPIView):
+	querset = Post.objects.all()
