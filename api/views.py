@@ -1,4 +1,10 @@
 # from django.shortcuts import render
+from django.db.models import Q
+
+from rest_framework.filters import (
+	SearchFilter,
+	OrderingFilter,
+	)
 from rest_framework.generics import (
 	CreateAPIView,
 	ListAPIView, 
@@ -33,8 +39,22 @@ class PostCreateAPIView(CreateAPIView):
 		serializer.save(author=self.request.user)
 
 class PostListAPIView(ListAPIView):
-	queryset = Post.objects.all()
+	# queryset = Post.objects.all()
 	serializer_class = PostListSerializer
+	filter_backends = [SearchFilter,OrderingFilter]
+	search_fields = ['title', 'content', 'author__first_name']
+
+	def get_queryset(self, *args, **kwargs):
+		queryset_list = Post.objects.all()
+		query = self.request.GET.get('q')
+		if query:
+			queryset_list = queryset_list.filter(
+				Q(title__icontains=query)|
+				Q(content__icontains=query)|
+				Q(author__first_name__icontains=query)|
+				Q(author__last_name__icontains=query)
+				).distinct()
+		return queryset_list
 
 class PostDetailAPIView(RetrieveAPIView):
 	queryset = Post.objects.all()
