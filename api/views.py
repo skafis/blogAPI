@@ -31,7 +31,6 @@ from .serializers import (
 	)
 # Create your views here.
 
-
 class PostCreateAPIView(CreateAPIView):
 	queryset = Post.objects.all()
 	serializer_class = PostCreateUpdateSerializer
@@ -48,7 +47,8 @@ class PostListAPIView(ListAPIView):
 	pagination_class = PostPageNumberPagination
 
 	def get_queryset(self, *args, **kwargs):
-		queryset_list = Post.objects.all()
+		# queryset_list = Post.objects.all()
+		queryset_list = Post.objects.order_by('-id')
 		query = self.request.GET.get('q')
 		if query:
 			queryset_list = queryset_list.filter(
